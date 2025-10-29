@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ankur Patel - Mobile App Developer Portfolio</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Nunito) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons (for mobile menu) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* Base font */
+        body {
+            font-family: 'Nunito', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* --- PRELOADER STYLES (NEW PERFECT ANIMATION) --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent; /* Layers will provide the background */
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            /* Transition will be managed by JS adding the 'preloader-hidden' class */
+        }
+        
+        /* Container for the sliding layers */
+        #loader-layers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Important to hide the layers as they slide out */
+        }
+
+        /* The individual sweeping layers */
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: translateY(0); /* Start position */
+            /* Fast, smooth transition for the slide-out effect */
+            transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        /* Define colors and stacking order (z-index) for the layers */
+        .layer-1 { background-color: #0f172a; z-index: 30; } /* Deep Navy (Top layer) */
+        .layer-2 { background-color: #1e293b; z-index: 20; transition-delay: 0.1s; } /* Dark Gray (Middle layer, slight delay) */
+        .layer-3 { background-color: #06b6d4; z-index: 10; transition-delay: 0.2s; } /* Cyan (Bottom layer, longer delay) */
+
+        /* Class added by JS to trigger the slide-out animation */
+        .preloader-hidden .layer {
+            transform: translateY(-100%); /* Slide layers up out of view */
+        }
+        
+        /* Style for the centered text/icon */
+        #loader-content {
+            position: relative;
+            z-index: 40; /* Above all layers */
+            opacity: 1;
+            transition: opacity 0.3s ease-out; /* Fades out quickly before layers sweep */
+        }
+        .preloader-hidden #loader-content {
+            opacity: 0;
+        }
+
+        /* --------------------------------- */
+
+        /* Animated gradient background for the hero */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #111827, #111827, #111827, #0f202b);
+            background-size: 400% 400%;
+            animation: gradient-flow 15s ease infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* CTA Pulse Animation */
+        @keyframes cta-pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgb(6 182 212 / 70%); }
+            70% { box-shadow: 0 0 0 8px rgb(6 182 212 / 0%); }
+            100% { box-shadow: 0 0 0 0 rgb(6 182 212 / 0%); }
+        }
+
+        .cta-pulse-glow {
+            animation: cta-pulse-glow 2s infinite ease-out;
+        }
+
+        /* Skill Card Hover Glow */
+        .skill-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skill-card:hover {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Scroll Animation Classes (Existing) */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .animate-on-scroll.delay-1 { transition-delay: 0.1s; }
+        .animate-on-scroll.delay-2 { transition-delay: 0.2s; }
+        .animate-on-scroll.delay-3 { transition-delay: 0.3s; }
+        .animate-on-scroll.delay-4 { transition-delay: 0.4s; }
+
+        /* Custom gradient text */
+        .text-gradient {
+            background: linear-gradient(to right, #22d3ee, #0ea5e9, #22d3ee); 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+
+    <!-- Preloader Element - Shows immediately on load -->
+    <div id="preloader">
+        <!-- Layer container for the sweeping effect -->
+        <div id="loader-layers">
+            <div class="layer layer-3"></div> <!-- Cyan (Bottom layer) -->
+            <div class="layer layer-2"></div> <!-- Dark Gray (Middle layer) -->
+            <div class="layer layer-1"></div> <!-- Deep Navy (Top layer) -->
+        </div>
+        
+        <!-- Content displayed on the loader screen -->
+        <div id="loader-content" class="flex flex-col items-center">
+            <div class="text-3xl font-extrabold text-cyan-400 mb-2">ANKUR PATEL</div>
+            <div class="text-xs tracking-widest uppercase text-gray-400">MOBILE APPLICATION DEVELOPER</div>
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper - Initially hidden via inline style, fades in via JS -->
+    <div id="main-content" style="opacity: 0;">
+
+        <!-- Header / Navigation -->
+        <header class="sticky top-0 z-50 w-full backdrop-blur-lg bg-gray-900/80 border-b border-gray-700/50">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-white hover:text-cyan-400 transition-colors">
+                    Ankur Patel
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#about" class="text-gray-300 hover:text-cyan-400 transition-colors">About</a>
+                    <a href="#skills" class="text-gray-300 hover:text-cyan-400 transition-colors">Skills</a>
+                    <a href="#projects" class="text-gray-300 hover:text-cyan-400 transition-colors">Projects</a>
+                    
+                    <a href="https://drive.google.com/file/d/1wBG9K1XaMYnZShLL0ZDAGLAiquuO9mMF/view?usp=sharing" download class="text-gray-300 hover:text-cyan-400 transition-colors flex items-center space-x-1">
+                        <i class="ph-bold ph-download-simple text-lg"></i>
+                        <span>Resume</span>
+                    </a>
+
+                    <!-- CTA Button (Primary accent: Cyan 500) -->
+                    <a href="#contact" class="inline-block px-4 py-2 bg-cyan-500 text-white font-medium rounded-lg hover:bg-cyan-600 transition-shadow shadow-lg hover:shadow-cyan-400/50">
+                        Contact Me
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-white p-2 rounded-md hover:bg-gray-700">
+                        <i id="menu-icon" class="ph-bold ph-list text-3xl"></i>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu (Dropdown) -->
+            <div id="mobile-menu" class="md:hidden hidden absolute top-full left-0 w-full bg-gray-800 border-b border-gray-700 shadow-xl">
+                <a href="#about" class="block w-full text-left px-6 py-4 text-gray-300 hover:text-cyan-400 hover:bg-gray-700 transition-colors">About</a>
+                <a href="#skills" class="block w-full text-left px-6 py-4 text-gray-300 hover:text-cyan-400 hover:bg-gray-700 transition-colors">Skills</a>
+                <a href="#projects" class="block w-full text-left px-6 py-4 text-gray-300 hover:text-cyan-400 hover:bg-gray-700 transition-colors">Projects</a>
+                
+                <a href="https://drive.google.com/file/d/1wBG9K1XaMYnZShLL0ZDAGLAiquuO9mMF/view?usp=sharing" download class="block w-full text-left px-6 py-4 text-cyan-400 hover:text-white hover:bg-cyan-700/50 transition-colors flex items-center space-x-3">
+                    <i class="ph-bold ph-download-simple text-xl"></i>
+                    <span>Download Resume</span>
+                </a>
+                
+                <a href="#contact" class="block w-full text-left px-6 py-4 bg-cyan-700/30 text-cyan-400 hover:bg-cyan-500/30 transition-colors">Contact Me</a>
+            </div>
+        </header>
+
+        <main>
+
+            <!-- Hero Section -->
+            <section id="hero" class="relative min-h-screen h-auto flex items-center justify-center text-center overflow-hidden animated-gradient py-20 md:py-0">
+                <div class="relative z-10 p-6 max-w-3xl">
+                    <!-- Note: Removed 'is-visible' from h1/p to ensure fade-in works correctly with preloader -->
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-4 animate-on-scroll">
+                        Hi, I'm <span class="text-gradient">Ankur Patel</span>
+                    </h1>
+                    <p class="text-2xl md:text-4xl font-medium text-gray-200 mb-8 animate-on-scroll delay-1">
+                        Mobile Application Developer
+                    </p>
+                    <p class="max-w-xl mx-auto text-lg text-gray-300 mb-10 animate-on-scroll delay-2">
+                        I build beautiful, high-performance mobile experiences for iOS and Android, turning complex ideas into elegant, user-friendly apps.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 animate-on-scroll delay-3">
+                        <!-- Primary CTA Button (Now includes cta-pulse-glow class for animation) -->
+                        <a href="https://drive.google.com/file/d/1wBG9K1XaMYnZShLL0ZDAGLAiquuO9mMF/view?usp=sharing" download class="px-6 py-3 bg-cyan-500 text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-cyan-600 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 cta-pulse-glow">
+                            <i class="ph-bold ph-download-simple text-xl"></i>
+                            <span>Download Resume</span>
+                        </a>
+                        <!-- Secondary Buttons (Subtle gray) -->
+                        <a href="#projects" class="px-6 py-3 bg-gray-700/50 text-white font-semibold rounded-lg hover:bg-gray-600/50 transition-all transform hover:scale-105">
+                            View My Work
+                        </a>
+                        <a href="#contact" class="px-6 py-3 bg-gray-700/50 text-white font-semibold rounded-lg hover:bg-gray-600/50 transition-all transform hover:scale-105">
+                            Get In Touch
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Me Section -->
+            <section id="about" class="py-24 bg-gray-900">
+                <div class="container mx-auto px-6 max-w-3xl">
+                    <div class="animate-on-scroll delay-1 text-center">
+                        <h2 class="text-4xl font-bold text-white mb-6">About Me</h2>
+                        <p class="text-lg text-gray-300 mb-4 leading-relaxed">
+                           Hello, I’m Ankur, a dedicated Mobile Developer with 3.5 years of experience building high-quality, enterprise-level applications for Android and iOS. My expertise spans Android native development (Kotlin and Java) and cross-platform development using Flutter. I thrive on solving complex problems and am obsessed with delivering pixel-perfect design. From the initial concept all the way to Play Store and App Store launch, I am committed to building products that delight users.
+                        </p>
+                
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills / Tech Stack Section (Consistent cyan accents) -->
+            <section id="skills" class="py-24 bg-gray-800/60">
+                <div class="container mx-auto px-6 text-center">
+                    <h2 class="text-4xl font-bold text-white mb-12 animate-on-scroll">
+                        My Tech Stack
+                    </h2>
+                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
+                        
+                        <!-- Languages - ADDED skill-card CLASS for new hover animation -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll">
+                            <i class="ph-bold ph-lightning text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Dart</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-1">
+                            <i class="ph-bold ph-coffee text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Java</span>
+                        </div>
+                        <!-- Kotlin -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-2">
+                            <i class="ph-bold ph-terminal-window text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Kotlin</span>
+                        </div>
+                        
+                        <!-- Frameworks -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-3">
+                            <i class="ph-bold ph-bird text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Flutter</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-4">
+                            <i class="ph-bold ph-android-logo text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Native Android</span>
+                        </div>
+
+                        <!-- Databases -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll">
+                            <i class="ph-bold ph-database text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">MySQL</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-1">
+                            <i class="ph-bold ph-disc text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">sqflite</span>
+                        </div>
+
+                        <!-- Cloud & Tools -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-2">
+                            <i class="ph-bold ph-code text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Android Studio</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-3">
+                            <i class="ph-bold ph-apple-logo text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Xcode</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-4">
+                            <i class="ph-bold ph-fire text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Firebase</span>
+                        </div>
+
+                        <!-- Deployment -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll">
+                            <i class="ph-bold ph-storefront text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">App Store</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-1">
+                            <i class="ph-bold ph-google-play-logo text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Play Store</span>
+                        </div>
+
+                        <!-- State Management -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-2">
+                            <i class="ph-bold ph-cube text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">BLoC</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-3">
+                            <i class="ph-bold ph-lightning-a text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">GetX</span>
+                        </div>
+
+                        <!-- Architectural Patterns -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-4">
+                            <i class="ph-bold ph-layout text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">MVC</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll">
+                            <i class="ph-bold ph-git-merge text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">MVVM</span>
+                        </div>
+                        
+                        <!-- Version Control -->
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-1">
+                            <i class="ph-bold ph-git-branch text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">Git</span>
+                        </div>
+                        <div class="group flex flex-col items-center justify-center p-4 bg-gray-700/50 rounded-lg shadow-lg skill-card transform hover:scale-105 hover:bg-cyan-900/50 animate-on-scroll delay-2">
+                            <i class="ph-bold ph-github-logo text-4xl mb-1 text-cyan-400 group-hover:text-white"></i>
+                            <span class="font-semibold text-sm text-center">GitHub</span>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section (Updated card styles and tag colors) -->
+            <section id="projects" class="py-24 bg-gray-900">
+                <div class="container mx-auto px-6">
+                    <h2 class="text-4xl font-bold text-white text-center mb-12 animate-on-scroll">
+                        Featured Projects
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        
+
+                        <div class="bg-gray-800/70 backdrop-blur-md rounded-lg overflow-hidden shadow-xl border border-gray-700 transition-all duration-300 hover:shadow-cyan-500/20 hover:border-cyan-700 transform hover:-translate-y-2 animate-on-scroll">
+                            <img src="https://play-lh.googleusercontent.com/iX_BNL3fGUpDpm7BhHK1axpnGHN28NARJYJtgnKUVkVrHNMI52O97Ojqsw8yUodoJeuh=w416-h235-rw" alt="Project 1" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-white mb-2">ERP System</h3>
+                                <p class="text-gray-300 mb-4">
+                                     Android & IOS Develop and maintain a live ERP mobile application available on the Play Store and App Store. Built with Flutter for cross-platform deployment. Integrated Firebase Cloud Messaging (FCM) to send real-time push notifications and app updates to users. Built key features that allow users to view and share business reports, plan and manage issue requests, check stock availability and inventory, track collection details, handle and monitor various business processes, and view summary data for quick and informed decision-making. Added a chat-bot feature that enables users to ask questions either by speaking or typing. The chatbot retrieves answers in real-time by fetching data from REST APIs connected to the live ERP system, helping users quickly access information without the need for manual searching. 
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <!-- Tags use a rich, deep cyan background -->
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Flutter</span>
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Firebase</span>
+                                    
+                                </div>
+                                <div class="flex space-x-4 mt-6">
+                                    <a href="https://play.google.com/store/apps/details?id=com.cildigital" class="text-cyan-400 hover:text-cyan-300 font-medium">Play Store Link</a>
+                                    <a href="https://apps.apple.com/us/app/cil-digital/id6475035378" class="text-cyan-400 hover:text-cyan-300 font-medium">App Store Link</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 1 -->
+                        <div class="bg-gray-800/70 backdrop-blur-md rounded-lg overflow-hidden shadow-xl border border-gray-700 transition-all duration-300 hover:shadow-cyan-500/20 hover:border-cyan-700 transform hover:-translate-y-2 animate-on-scroll">
+                            <img src="https://play-lh.googleusercontent.com/64WWoyO5sN3MpmXFSak_BY_A70SEIHFriKEkgSMQopVDCna6hazxROYfSjRo_BYQcLOgp0773qvsDAtmjZTq6Q=w526-h296-rw" alt="Project 1" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-white mb-2">Video Downloader</h3>
+                                <p class="text-gray-300 mb-4">
+                                    Developed a full-featured Video Downloader Android application using Flutter, enabling users to download videos and images from multiple social media platforms including Instagram Reels, Facebook, TikTok, and WhatsApp Statuses. The app allows users to preview, manage, and delete downloaded media within a built-in gallery. It supports over 20 languages, enhancing accessibility for a global audience. Users can also switch between light and dark themes for a personalized experience. The application features a clean and responsive UI, efficient storage handling, and seamless performance across devices.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <!-- Tags use a rich, deep cyan background -->
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Flutter</span>
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Firebase</span>
+                                    
+                                </div>
+                                <div class="flex space-x-4 mt-6">
+                                    <a href="https://play.google.com/store/apps/details?id=com.anvixo.media.socialdownloader" class="text-cyan-400 hover:text-cyan-300 font-medium">Play Store Link</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 2 -->
+                        <div class="bg-gray-800/70 backdrop-blur-md rounded-lg overflow-hidden shadow-xl border border-gray-700 transition-all duration-300 hover:shadow-cyan-500/20 hover:border-cyan-700 transform hover:-translate-y-2 animate-on-scroll delay-1">
+                            <img src="https://play-lh.googleusercontent.com/5R3qLQXL4eFfyTXKeZKhxxenltp0uDFGSZW6ZfCX9UeDgm9xGmAVjnR9nxezEA8AyJmAhbBXWj9G7y9xBj-c=w416-h235-rw" alt="Project 2" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-white mb-2">Tic Tac Toe 2 Player: XO Game</h3>
+                                <p class="text-gray-300 mb-4">
+                                   This game is a fun two‑player strategy experience with three board size options: 3×3, 6×6, and 9×9. You can pick to play with a friend, or go solo and challenge the computer. No matter which board size you choose, the game adjusts the win‑conditions automatically. It keeps track of whose turn it is, stops you from picking a spot that’s already taken, and figures out when someone wins or when the game ends in a tie. The screen is simple and clear, showing turns and results, and you can easily restart and pick a new mode or board size.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                     <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Flutter</span>
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Firebase</span>
+
+                                </div>
+                                <div class="flex space-x-4 mt-6">
+                
+                                    <a href="https://play.google.com/store/apps/details?id=com.anvixo.game.xoxo.tictactoe" class="text-cyan-400 hover:text-cyan-300 font-medium">Play Store Link</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 3 -->
+                        <div class="bg-gray-800/70 backdrop-blur-md rounded-lg overflow-hidden shadow-xl border border-gray-700 transition-all duration-300 hover:shadow-cyan-500/20 hover:border-cyan-700 transform hover:-translate-y-2 animate-on-scroll delay-2">
+                            <img src="https://play-lh.googleusercontent.com/cW7BJgtuArTsyRbrAWs1BEPJnANxU3wu0QDw8GTBNxXN6veV8abrGlMetU4GeLAccg=w416-h235-rw" alt="Project 3" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-white mb-2">Auto Tapper</h3>
+                                <p class="text-gray-300 mb-4">
+                                    Developed a native Android app in Java that automatically taps and swipes across any app with lightning-fast 30 ms speed. Users can set, save, preview, and delete tap sequences. The app supports over 20 languages, making automation easy and accessible for everyone.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Android</span>
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Java</span>
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Firebase</span>
+                                </div>
+                                <div class="flex space-x-4 mt-6">
+                                 
+                                    <a href="https://play.google.com/store/apps/details?id=com.ankuapps.autoclicker.clicker.autoclickerapp.autoclickerforgames.automatictap" class="text-cyan-400 hover:text-cyan-300 font-medium">Play Store Link</a>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="bg-gray-800/70 backdrop-blur-md rounded-lg overflow-hidden shadow-xl border border-gray-700 transition-all duration-300 hover:shadow-cyan-500/20 hover:border-cyan-700 transform hover:-translate-y-2 animate-on-scroll delay-2">
+                            <img src="https://play-lh.googleusercontent.com/pLoy-GEtz-12oD6RHbWfnXbR7aEAi_l1Go7SqzvOxJgYBOUzQdmeqxED__WdrClCWt8=w416-h235-rw" alt="Project 3" class="w-full h-56 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-white mb-2">Speaker Cleaner - Water Eject</h3>
+                                <p class="text-gray-300 mb-4">
+                                    Restore crystal‑clear audio on your phone with our smart all‑in‑one sound tool. Easily eject water or debris from your speaker using targeted frequencies, then test stereo balance, measure ambient noise, and enjoy soothing vibration‑relaxation features. Keep your device performing at its best with advanced sound diagnostics, customizable frequency modes, and a simple, user-friendly interface. Perfect for maintaining speaker health, improving call clarity, and enhancing music quality.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Flutter</span>
+                                    <span class="text-xs font-medium bg-cyan-900 text-cyan-300 px-3 py-1 rounded-full">Firebase</span>
+                                </div>
+                                <div class="flex space-x-4 mt-6">
+                                 
+                                    <a href="https://play.google.com/store/apps/details?id=com.watereject.speackercleaner" class="text-cyan-400 hover:text-cyan-300 font-medium">Play Store Link</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section (Consistent CTA colors) -->
+            <section id="contact" class="py-24 bg-gray-800/60">
+                <div class="container mx-auto px-6 text-center max-w-3xl">
+                    <h2 class="text-4xl font-bold text-white mb-6 animate-on-scroll">
+                        Get In Touch
+                    </h2>
+                    <p class="text-lg text-gray-300 mb-10 leading-relaxed animate-on-scroll delay-1">
+                        I'm currently available for freelance opportunities and open to discussing new projects. Whether you have a question or just want to say hi, my inbox is always open!
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-6">
+                        <!-- Primary CTA Button (Cyan 500) -->
+                        <a href="mailto:dev.ankurpatel11@gmail.com" class="inline-block px-8 py-4 bg-cyan-500 text-white font-bold rounded-lg shadow-lg hover:bg-cyan-600 transition-all transform hover:scale-105 animate-on-scroll delay-2">
+                            Email Me
+                        </a>
+                        <!-- Secondary Button (Subtle gray) -->
+                        <a href="https://linkedin.com/in/ankurpatel11" target="_blank" class="inline-block px-8 py-4 bg-gray-700/50 text-white font-bold rounded-lg hover:bg-gray-600/50 transition-all transform hover:scale-105 animate-on-scroll delay-3">
+                            LinkedIn
+                        </a>
+                        
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-10 bg-gray-900 border-t border-gray-700/50">
+            <div class="container mx-auto px-6 text-center text-gray-400">
+                <p>&copy; 2025 Ankur Patel. All rights reserved.</p>
+                <p class="text-sm mt-2">Built with <span class="text-cyan-400">Tailwind CSS</span> and <span class="text-red-400">❤</span></p>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- JavaScript for Animations & Mobile Menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu logic runs as soon as the DOM is ready
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const menuLinks = mobileMenu.querySelectorAll('a');
+
+            function toggleMenu() {
+                mobileMenu.classList.toggle('hidden');
+                if (mobileMenu.classList.contains('hidden')) {
+                    menuIcon.classList.remove('ph-x');
+                    menuIcon.classList.add('ph-list');
+                } else {
+                    menuIcon.classList.remove('ph-list');
+                    menuIcon.classList.add('ph-x');
+                }
+            }
+            menuBtn.addEventListener('click', toggleMenu);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', toggleMenu);
+            });
+        });
+
+        // window.onload ensures all external assets (like Phosphor icons and Nunito font) are fully loaded
+        window.onload = function() {
+            const mainContent = document.getElementById('main-content');
+            const preloader = document.getElementById('preloader');
+            
+            // 1. Define the Scroll Animation Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // Start animation when element is visible
+                    if (entry.isIntersecting && !entry.target.classList.contains('is-visible')) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // 10% of the element must be visible
+            });
+
+            // 2. Start observing elements now that they are fully loaded and about to be visible
+            const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+            elementsToAnimate.forEach(el => {
+                observer.observe(el);
+            });
+            
+            // 3. Trigger the preloader hide animation (layered sweep)
+            // This adds the 'preloader-hidden' class, which starts the CSS transitions
+            preloader.classList.add('preloader-hidden');
+
+            // 4. Smoothly show the main content. The delay ensures it waits until the layers have started moving.
+            mainContent.style.transition = 'opacity 0.6s ease-in 0.6s'; 
+            mainContent.style.opacity = '1'; 
+
+            // 5. Remove the preloader from the DOM after the full animation (0.8s max layer transition + buffer) is complete
+            setTimeout(() => {
+                preloader.remove();
+            }, 1000); 
+        };
+    </script>
+
+</body>
+</html>
