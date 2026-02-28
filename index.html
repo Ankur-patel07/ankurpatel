@@ -3,11 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architect & Mobile Engineer | Portfolio</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
+    <!-- SEO Meta Tags -->
+    <title>Ankur Patel | Mobile Application Developer & Flutter Developer | Android Expert</title>
+    <meta name="description" content="Experienced Mobile Application Developer and Flutter Expert. Specialized in high-performance Android development, app architecture, and scalable mobile solutions. Expert in Dart, Kotlin, Java, and Firebase.">
+    <meta name="keywords" content="Ankur Patel, Ankur Khunt, Mobile Application Developer, Flutter Developer, Android Developer, App Architecture, React Native, Firebase, Dart, Kotlin, Java, Mobile App Development, Cross-platform Development, App Store, Play Store, UI/UX Developer">
+    <meta name="author" content="Ankur Patel">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="distribution" content="global">
+    
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:url" content="https://ankurpatel11.vercel.app">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ankur Patel | Mobile Application Developer & Flutter Expert">
+    <meta property="og:description" content="Expert Mobile Application Developer specializing in Flutter, Android, and high-performance app architecture. Building scalable, user-centric mobile solutions.">
+    <meta property="og:site_name" content="Ankur Patel - Mobile Developer">
+    <meta property="og:image" content="https://drive.google.com/file/d/1wBG9K1XaMYnZShLL0ZDAGLAiquuO9mMF/view?usp=sharing">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Instagram Profile -->
+    <meta name="instagram:username" content="_ankur_patel_">
+    <meta property="ig:url" content="https://www.instagram.com/_ankur_patel_">
+    <meta name="description" content="Follow Ankur Patel on Instagram for mobile development tips, Flutter tutorials, and app development insights.">
+    
+    <!-- LinkedIn Profile -->
+    <meta property="article:author" content="https://linkedin.com/in/ankurpatel11">
+    
+    <!-- Canonical URL -->
+    <meta rel="canonical" href="https://ankurpatel11.vercel.app">
+    
+    <!-- Mobile App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#020617">
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- AOS removed -->
 
     <style>
         :root {
@@ -29,6 +64,12 @@
         /* --- Global Resets --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; overflow-x: hidden; }
+        /* Hide native scrollbars while preserving scroll behavior */
+        html, body {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
         body {
             background-color: var(--bg);
             color: var(--text-primary);
@@ -598,6 +639,7 @@
             margin-top: 40px;
             align-items: stretch;
             z-index: 1;
+            perspective: 1200px;
         }
 
         .project-card {
@@ -607,15 +649,52 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
-            transition: transform 360ms var(--transition), box-shadow 360ms var(--transition), border-color 360ms var(--transition);
+            transition: border-color 240ms ease-out;
             height: 100%;
+            transform-style: preserve-3d;
+            position: relative;
+            will-change: transform, box-shadow;
+            transform: perspective(1200px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0px);
         }
-        .project-card:hover { border-color: var(--accent); transform: translateY(-6px); box-shadow: 0 24px 60px rgba(2,6,23,0.6); }
+        .project-card:hover { border-color: var(--accent); }
+        
+        .project-card.active {
+            box-shadow: 0 24px 80px rgba(2,6,23,0.7), 0 0 60px rgba(56,189,248,0.25);
+        }
 
-        .project-media { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(99,102,241,0.03)); display: block; }
+        .project-media { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(99,102,241,0.03)); 
+            display: block;
+            transform: translateZ(20px);
+            position: relative;
+            will-change: transform;
+        }
+        .project-media::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            animation: projectShimmer 3s infinite;
+            pointer-events: none;
+        }
         .project-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .project-body { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto; }
+        @keyframes projectShimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .project-body { 
+            padding: 18px 20px 22px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            flex: 1 1 auto; 
+            transform: translateZ(25px);
+            will-change: transform;
+        }
         .project-tag { color: var(--accent); font-family: var(--font-header); font-size: 0.65rem; letter-spacing: 1.8px; display: inline-block; }
         .project-title { font-family: var(--font-header); font-size: 1.15rem; margin: 6px 0 0; color: var(--text-primary); }
         .project-desc { color: var(--text-secondary); font-size: 0.95rem; line-height:1.5; margin-top: 6px; }
@@ -758,6 +837,70 @@
             opacity: 0;
         }
     </style>
+
+    <!-- JSON-LD Structured Data for Rich Snippets -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Ankur Patel",
+        "alternateName": ["Ankur Khunt", "Ankur Patel Developer"],
+        "url": "https://ankurpatel11.vercel.app",
+        "jobTitle": ["Mobile Application Developer", "Flutter Developer", "Android Developer", "App Architect"],
+        "email": "dev.ankurpatel11@gmail.com",
+        "sameAs": [
+            "https://linkedin.com/in/ankurpatel11",
+            "https://github.com/ankurpatel",
+            "https://instagram.com/ankurpatel"
+        ],
+        "image": "https://ankurpatel.dev/profile-image.jpg",
+        "description": "Expert Mobile Application Developer specializing in Flutter, Android development, and high-performance app architecture. Building scalable, user-centric mobile solutions.",
+        "knowsAbout": [
+            "Flutter Development",
+            "Android Development",
+            "Mobile App Architecture",
+            "Dart Programming",
+            "Kotlin",
+            "Java",
+            "Firebase",
+            "React Native",
+            "App Store optimization",
+            "Play Store optimization",
+            "UI/UX Implementation",
+            "REST APIs",
+            "State Management",
+            "BLoC Pattern",
+            "GetX",
+            "MVVM"
+        ],
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Self-Employed"
+        }
+    }
+    </script>
+
+    <!-- JSON-LD for Service -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Ankur Patel - Mobile Development",
+        "image": "https://ankurpatel11.vercel.app/og-image.jpg",
+        "description": "Professional Mobile Application Development Services - Flutter, Android, and Cross-platform Solutions",
+        "url": "https://ankurpatel11.vercel.app",
+        "telephone": "+91-XXXXXXXXXX",
+        "email": "dev.ankurpatel11@gmail.com",
+        "areaServed": "Global",
+        "serviceType": [
+            "Mobile App Development",
+            "Flutter Development",
+            "Android App Development",
+            "App Architecture Design",
+            "Cross-platform Development"
+        ]
+    }
+    </script>
 </head>
 <body>
 
@@ -835,7 +978,7 @@ Collaborating effectively across disciplines, I translate design vision and prod
             <div class="phone-container">
                 <div class="phone-mockup">
                         <div class="phone-screen">
-                            <img src="https://lh3.googleusercontent.com/d/1KHrhUfAxcD4fVfm_Iy7sli3bF8x_X9uX=w800"  style="width:100%;height:100%;object-fit:cover;">
+                            <img src="https://lh3.googleusercontent.com/d/1KHrhUfAxcD4fVfm_Iy7sli3bF8x_X9uX=w800" alt="Ankur Patel Mobile Application Portfolio Showcase" style="width:100%;height:100%;object-fit:cover;">
                         </div>
                 </div>
             </div>
@@ -1483,6 +1626,91 @@ Collaborating effectively across disciplines, I translate design vision and prod
                 }
 
                 window.addEventListener('load', runIntro);
+            })();
+
+            // 3D Project Card Interaction with Mouse - Smooth & Optimized
+            (function() {
+                const projectCards = document.querySelectorAll('.project-card');
+                
+                projectCards.forEach(card => {
+                    let mouseX = 0;
+                    let mouseY = 0;
+                    let currentRotateX = 0;
+                    let currentRotateY = 0;
+                    let targetRotateX = 0;
+                    let targetRotateY = 0;
+                    let isHovering = false;
+                    let animationFrameId = null;
+                    
+                    // Smooth interpolation
+                    function smoothInterpolate(current, target, smooth = 0.15) {
+                        return current + (target - current) * smooth;
+                    }
+                    
+                    // Animation loop for smooth easing
+                    function updateTransform() {
+                        currentRotateX = smoothInterpolate(currentRotateX, targetRotateX, 0.18);
+                        currentRotateY = smoothInterpolate(currentRotateY, targetRotateY, 0.18);
+                        
+                        card.style.transform = `perspective(1200px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) rotateZ(0deg) translateY(-8px)`;
+                        
+                        if (isHovering) {
+                            animationFrameId = requestAnimationFrame(updateTransform);
+                        }
+                    }
+                    
+                    card.addEventListener('mouseenter', () => {
+                        isHovering = true;
+                        card.classList.add('active');
+                        if (!animationFrameId) {
+                            animationFrameId = requestAnimationFrame(updateTransform);
+                        }
+                    });
+                    
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        mouseX = e.clientX - rect.left;
+                        mouseY = e.clientY - rect.top;
+                        
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        
+                        // Calculate target rotation with smooth ranges
+                        targetRotateX = ((mouseY - centerY) / rect.height) * 12;
+                        targetRotateY = -((mouseX - centerX) / rect.width) * 12;
+                        
+                        // Clamp values for stability
+                        targetRotateX = Math.max(-12, Math.min(12, targetRotateX));
+                        targetRotateY = Math.max(-12, Math.min(12, targetRotateY));
+                    });
+                    
+                    card.addEventListener('mouseleave', () => {
+                        isHovering = false;
+                        card.classList.remove('active');
+                        
+                        // Reset to neutral with easing
+                        targetRotateX = 0;
+                        targetRotateY = 0;
+                        
+                        // Final smooth transition back to zero
+                        const finalReset = () => {
+                            currentRotateX = smoothInterpolate(currentRotateX, 0, 0.2);
+                            currentRotateY = smoothInterpolate(currentRotateY, 0, 0.2);
+                            
+                            card.style.transform = `perspective(1200px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) rotateZ(0deg) translateY(0px)`;
+                            
+                            if (Math.abs(currentRotateX) > 0.1 || Math.abs(currentRotateY) > 0.1) {
+                                requestAnimationFrame(finalReset);
+                            }
+                        };
+                        finalReset();
+                        
+                        if (animationFrameId) {
+                            cancelAnimationFrame(animationFrameId);
+                            animationFrameId = null;
+                        }
+                    });
+                });
             })();
     </script>
 </body>
